@@ -15,7 +15,7 @@ DerivacionExterna.init({
     id_accion:{
         type:DataTypes.INTEGER
     },
-    id_ruta:{
+    codigo_tramite:{
         type:DataTypes.INTEGER
     },
     id_area:{
