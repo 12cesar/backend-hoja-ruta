@@ -5,9 +5,6 @@ class Usuario extends Model{};
 
 
 Usuario.init({
-    nombre:{
-        type:DataTypes.STRING
-    },
     id_rol:{
         type:DataTypes.INTEGER
     },
@@ -21,6 +18,9 @@ Usuario.init({
         type:DataTypes.STRING
     },
     apellido:{
+        type:DataTypes.STRING
+    },
+    password:{
         type:DataTypes.STRING
     },
     estado:{

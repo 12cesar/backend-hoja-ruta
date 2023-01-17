@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
+const Usuario = require("./usuario");
 
 class Area extends Model{};
 
@@ -20,5 +21,12 @@ Area.init({
     timestamps:false,
     tableName:'area'
 });
-
+Area.hasMany(Usuario,{
+    as:'AreaUsuario',
+    foreignKey:'id_area'
+});
+Usuario.belongsTo(Area,{
+    foreignKey:'id_area',
+    sourceKey:'id'
+});
 module.exports = Area;

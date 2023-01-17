@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { getRutaInternas, getRutaInterna, postRutaInterna, putRutaInterna, deleteRutaInterna } = require("../controllers/ruta-internas");
+const { validarCampos, validarJWT } = require("../middlewares");
 
 
 
@@ -8,11 +9,14 @@ const router = Router();
 
 
 
-router.get('/',getRutaInternas);
-router.get('/:id',getRutaInterna);
+router.get('/',[
+    validarJWT,
+    validarCampos
+],getRutaInternas);
+router.get('/:codigo',getRutaInterna);
 router.post('/',postRutaInterna);
-router.put('/:id',putRutaInterna);
-router.delete('/:id',deleteRutaInterna);
+router.put('/:codigo',putRutaInterna);
+router.delete('/:codigo',deleteRutaInterna);
 
 
 

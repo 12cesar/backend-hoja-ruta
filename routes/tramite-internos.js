@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { getTramiteInternos, getTramiteInterno, postTramiteInterno, putTramiteInterno, deleteTramiteInterno } = require("../controllers/tramite-internos");
+const { validarCampos, validarJWT } = require("../middlewares");
 
 
 
@@ -8,9 +9,15 @@ const router = Router();
 
 
 
-router.get('/',getTramiteInternos);
-router.get('/:id',getTramiteInterno);
-router.post('/',postTramiteInterno);
+router.get('/',[
+    validarJWT,
+    validarCampos
+],getTramiteInternos);
+router.get('/:codigo',getTramiteInterno);
+router.post('/',[
+    validarJWT,
+    validarCampos
+],postTramiteInterno);
 router.put('/:id',putTramiteInterno);
 router.delete('/:id',deleteTramiteInterno);
 

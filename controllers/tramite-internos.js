@@ -1,10 +1,20 @@
 const { request, response } = require("express");
+const { codigoTramiteInterno } = require("../helpers/fc-codigo-tramite");
+const {TramiteInterno} = require("../models");
 
 
-const getTramiteInternos=(req=request,res=response)=>{
+const getTramiteInternos=async(req=request,res=response)=>{
     try {
+        const usuario = req.usuarioToken;
+        const tramiteInterno = await TramiteInterno.findAll({
+            where:{
+                id_area:usuario.id_area
+            }
+        })
         res.json({
-            ok:true
+            ok:true,
+            msg:'Se muestra los tramites con exito',
+            tramiteInterno
         })
     } catch (error) {
         res.status(400).json({
@@ -13,10 +23,18 @@ const getTramiteInternos=(req=request,res=response)=>{
         })
     }
 }
-const getTramiteInterno=(req=request,res=response)=>{
+const getTramiteInterno=async(req=request,res=response)=>{
     try {
+        const {codigo} =req.params;
+        const tramiteInterno = await TramiteInterno.findOne({
+            where:{
+                codigo_documento:codigo
+            }
+        })
         res.json({
-            ok:true
+            ok:true,
+            msg:'Se muestra el tramite con exito',
+            tramiteInterno
         })
     } catch (error) {
         res.status(400).json({
@@ -25,10 +43,24 @@ const getTramiteInterno=(req=request,res=response)=>{
         })
     }
 }
-const postTramiteInterno=(req=request,res=response)=>{
+const postTramiteInterno=async(req=request,res=response)=>{
     try {
+        const usuario = req.usuarioToken;
+        const {asunto,...data} = req.body;
+        data.asunto = asunto.toUpperCase();
+        const registrado = `${usuario.nombre} ${usuario.apellido}`
+        const {codigo,ano,fecha,hora} = await codigoTramiteInterno();
+        data.codigo_documento = codigo;
+        data.registrado= registrado;
+        data.ano=`${ano}`;
+        data.fecha=fecha;
+        data.hora=hora;
+        data.id_area = usuario.id_area;
+        const tramiteInterno = await TramiteInterno.create(data);
         res.json({
-            ok:true
+            ok:true,
+            msg:'Se creo el tramite interno con exito',
+            tramiteInterno
         })
     } catch (error) {
         res.status(400).json({

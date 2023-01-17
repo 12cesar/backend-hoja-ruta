@@ -1,5 +1,6 @@
 const {response, request} = require('express');
 const jwt = require('jsonwebtoken');
+const { Rol, Area } = require('../models');
 const Usuario = require('../models/usuario');
 const validarJWT =async (req= request, res = response, next)=>{ 
     const token = req.header('x-token');
@@ -14,7 +15,19 @@ const validarJWT =async (req= request, res = response, next)=>{
 
         // leer el usuario
 
-        const usuario = await Usuario.findOne({_id: id});
+        const usuario = await Usuario.findOne({
+            where:{
+                id
+            },
+            include:[
+                {
+                    model:Rol
+                },
+                {
+                    model:Area
+                }
+            ]
+        });
 
         if (!usuario) {
             return res.status(401).json({

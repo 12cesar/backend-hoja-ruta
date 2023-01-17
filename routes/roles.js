@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const { getRoles, getRole, postRole, putRole, deleteRole } = require("../controllers/roles");
 
 
 
@@ -7,11 +8,11 @@ const router = Router();
 
 
 
-router.get('/',);
-router.get('/:id',);
-router.post('/',);
-router.put('/:id',);
-router.delete('/:id',);
+router.get('/',getRoles);
+router.get('/:id',getRole);
+router.post('/',postRole);
+router.put('/:id',putRole);
+router.delete('/:id',deleteRole);
 
 
 

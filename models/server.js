@@ -16,6 +16,13 @@ class Server{
             /* auth: '/api/auth',
             usuario: '/api/usuario',
             uploads: '/api/uploads' */
+            rol:'/api/roles',
+            area:'/api/area',
+            usuario: '/api/usuario',
+            auth: '/api/auth',
+            tramiteinterno:'/api/tramite-interno',
+            rutainterna:'/api/ruta-interna',
+            prioridad:'/api/prioridad'
         }
         //Connect to socket
         this.httpServer = new http.Server(this.app);
@@ -68,6 +75,13 @@ class Server{
         
     }
     routes(){
+        this.app.use(this.paths.rol, require('../routes/roles'));
+        this.app.use(this.paths.area, require('../routes/areas'));
+        this.app.use(this.paths.usuario, require('../routes/usuarios'));
+        this.app.use(this.paths.auth, require('../routes/auth'));
+        this.app.use(this.paths.tramiteinterno, require('../routes/tramite-internos'));
+        this.app.use(this.paths.rutainterna, require('../routes/ruta-internas'));
+        this.app.use(this.paths.prioridad, require('../routes/prioridades'));
         /* this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuario, require('../routes/usuarios'));
         this.app.use(this.paths.uploads, require('../routes/uploads')); */

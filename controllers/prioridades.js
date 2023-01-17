@@ -1,10 +1,19 @@
 const { request, response } = require("express");
+const { Prioridad } = require("../models");
 
 
-const getPrioridades=(req=request,res=response)=>{
+const getPrioridades=async(req=request,res=response)=>{
     try {
+        const {estado}= req.query;
+        const prioridad =  await Prioridad.findAll({
+            where:{
+                estado
+            }
+        })
         res.json({
-            ok:true
+            ok:true,
+            msg:'Se muestran las prioridades con exito',
+            prioridad
         })
     } catch (error) {
         res.status(400).json({

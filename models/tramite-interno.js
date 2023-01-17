@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
+const RutaInterna = require("./ruta-interna");
 
 class TramiteInterno extends Model{};
 
@@ -32,11 +33,24 @@ TramiteInterno.init({
     },
     id_prioridad:{
         type:DataTypes.INTEGER,
+    },
+    id_area:{
+        type:DataTypes.INTEGER,
     }
 },{
     sequelize,
     timestamps:false,
     tableName:'tramite_interno'
 });
+
+TramiteInterno.hasMany(RutaInterna,{
+    as:'TramiteInternoRuta',
+    foreignKey:'codigo_tramite'
+});
+
+RutaInterna.belongsTo(TramiteInterno,{
+    foreignKey:'codigo_tramite',
+    sourceKey:'codigo_documento'
+})
 
 module.exports = TramiteInterno;
