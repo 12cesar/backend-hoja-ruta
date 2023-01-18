@@ -5,6 +5,7 @@ const fcLetra = require("./fc-letra");
 const fcCodigoTramite=require("./fc-codigo-tramite");
 const fcDate = require("./generar-fecha");
 const fcRuta = require("./fc-ruta");
+const fcDestino = require("./fc-destinos");
 module.exports = {
   ...dbValidators,
   ...generarJWT,
@@ -12,5 +13,6 @@ module.exports = {
   ...fcLetra,
   ...fcCodigoTramite,
   ...fcDate,
-  ...fcRuta
+  ...fcRuta,
+  ...fcDestino
 };
