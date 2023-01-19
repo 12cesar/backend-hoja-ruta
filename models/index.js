@@ -6,6 +6,9 @@ const Area = require("./area");
 const TramiteInterno = require("./tramite-interno");
 const RutaInterna = require("./ruta-interna");
 const Prioridad = require("./prioridad");
+const Accion = require("./accion");
+const DerivacionInterna = require("./derivacion-interna");
+const SeguimientoInterno = require("./seguimiento-interno");
 module.exports = {
   Server,
   Rol,
@@ -13,5 +16,8 @@ module.exports = {
   Usuario,
   TramiteInterno,
   RutaInterna,
-  Prioridad
+  Prioridad,
+  Accion,
+  DerivacionInterna,
+  SeguimientoInterno
 };

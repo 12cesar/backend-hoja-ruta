@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
+const DerivacionInterna = require("./derivacion-interna");
 const Usuario = require("./usuario");
 
 class Area extends Model{};
@@ -26,6 +27,14 @@ Area.hasMany(Usuario,{
     foreignKey:'id_area'
 });
 Usuario.belongsTo(Area,{
+    foreignKey:'id_area',
+    sourceKey:'id'
+});
+Area.hasMany(DerivacionInterna,{
+    as:'AreaDerivacionInterna',
+    foreignKey:'id_area'
+});
+DerivacionInterna.belongsTo(Area,{
     foreignKey:'id_area',
     sourceKey:'id'
 });

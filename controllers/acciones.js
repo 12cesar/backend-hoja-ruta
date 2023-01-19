@@ -1,10 +1,19 @@
 const { request, response } = require("express");
+const { Accion } = require("../models");
 
 
-const getAcciones=(req=request,res=response)=>{
+const getAcciones=async(req=request,res=response)=>{
     try {
+        const {estado} =req.query;
+        const acciones = await Accion.findAll({
+            where:{
+                estado
+            }
+        })
         res.json({
-            ok:true
+            ok:true,
+            msg:'Se muestra con exito las acciones',
+            acciones
         })
     } catch (error) {
         res.status(400).json({

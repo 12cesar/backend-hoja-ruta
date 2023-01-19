@@ -9,7 +9,8 @@ const getTramiteInternos=async(req=request,res=response)=>{
         const tramiteInterno = await TramiteInterno.findAll({
             where:{
                 id_area:usuario.id_area
-            }
+            },
+            order: [["codigo_documento", "DESC"]],
         })
         res.json({
             ok:true,

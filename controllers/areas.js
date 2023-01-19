@@ -1,7 +1,7 @@
 const { request, response } = require("express");
 const { siglaFun } = require("../helpers/fc-letra");
 const { Area } = require("../models");
-
+const sequelize = require('../database/database');
 
 const getAreas=async(req=request,res=response)=>{
     try {
@@ -15,6 +15,23 @@ const getAreas=async(req=request,res=response)=>{
             ok:true,
             msg:'Se muestra las area con exito',
             area
+        })
+    } catch (error) {
+        res.status(400).json({
+            ok:false,
+            msg:`Error:${error}`
+        })
+    }
+}
+const getSinAreas=async(req=request,res=response)=>{
+    try {
+        const {id_area} = req.usuarioToken;
+        
+        const [results, metadata] = await sequelize.query('select * from area where estado=1 and id!='+ id_area);
+        res.json({
+            ok:true,
+            msg:'Se muestra las area con exito',
+            area:results
         })
     } catch (error) {
         res.status(400).json({
@@ -82,6 +99,7 @@ const deleteArea=(req=request,res=response)=>{
 
 module.exports = {
     getAreas,
+    getSinAreas,
     getArea,
     postArea,
     putArea,

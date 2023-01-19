@@ -10,7 +10,7 @@ const {
 const router = Router();
 
 router.get("/", getSeguimientoInternos);
-router.get("/:id", getSeguimientoInterno);
+router.get("/:codigo", getSeguimientoInterno);
 router.post("/", postSeguimientoInterno);
 router.put("/:id", putSeguimientoInterno);
 router.delete("/:id", deleteSeguimientoInterno);

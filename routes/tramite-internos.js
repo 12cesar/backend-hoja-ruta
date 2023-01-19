@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getTramiteInternos, getTramiteInterno, postTramiteInterno, putTramiteInterno, deleteTramiteInterno } = require("../controllers/tramite-internos");
+const { getTramiteInternos, getTramiteInterno, postTramiteInterno, putTramiteInterno, deleteTramiteInterno, getTramiteInternosDerivados } = require("../controllers/tramite-internos");
 const { validarCampos, validarJWT } = require("../middlewares");
 
 

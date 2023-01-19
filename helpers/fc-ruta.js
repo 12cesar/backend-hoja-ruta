@@ -15,14 +15,10 @@ const rutaInter = async(codigo)=>{
             return false   
         }
         else{
-            const resp = await RutaInterna.update(
-                {
-                    estado:0
-                },
+            const resp = await RutaInterna.destroy(
                 {
                     where:{
-                        codigo_tramite:codigo,
-                        estado:1
+                        codigo_tramite:codigo
                     }
                 }
              );
