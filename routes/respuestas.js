@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getRespuestas, getRespuesta, postRespuesta, putRespuesta, deleteRespuesta } = require("../controllers/respuestas");
+const { getRespuestas, getRespuesta, putRespuesta, deleteRespuesta, postRespuestaInterno } = require("../controllers/respuestas");
 
 
 
@@ -10,7 +10,7 @@ const router = Router();
 
 router.get('/',getRespuestas);
 router.get('/:id',getRespuesta);
-router.post('/',postRespuesta);
+router.post('/tramite/interno',postRespuestaInterno);
 router.put('/:id',putRespuesta);
 router.delete('/:id',deleteRespuesta);
 

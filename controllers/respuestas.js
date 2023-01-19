@@ -1,10 +1,19 @@
 const { request, response } = require("express");
+const { Respuesta } = require("../models");
 
 
-const getRespuestas=(req=request,res=response)=>{
+const getRespuestas=async(req=request,res=response)=>{
     try {
+        const {estado} = req.query;
+        const respuesta = await Respuesta.findAll({
+            where:{
+                estado
+            }
+        })
         res.json({
-            ok:true
+            ok:true,
+            msg:'Se muestran las respuestas con exito',
+            respuesta
         })
     } catch (error) {
         res.status(400).json({
@@ -25,10 +34,12 @@ const getRespuesta=(req=request,res=response)=>{
         })
     }
 }
-const postRespuesta=(req=request,res=response)=>{
+const postRespuestaInterno=(req=request,res=response)=>{
     try {
+        const data = req.body;
         res.json({
-            ok:true
+            ok:true,
+            data
         })
     } catch (error) {
         res.status(400).json({
@@ -66,7 +77,7 @@ const deleteRespuesta=(req=request,res=response)=>{
 module.exports = {
     getRespuestas,
     getRespuesta,
-    postRespuesta,
+    postRespuestaInterno,
     putRespuesta,
     deleteRespuesta
 }

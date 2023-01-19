@@ -9,6 +9,7 @@ const Prioridad = require("./prioridad");
 const Accion = require("./accion");
 const DerivacionInterna = require("./derivacion-interna");
 const SeguimientoInterno = require("./seguimiento-interno");
+const Respuesta = require("./respuesta");
 module.exports = {
   Server,
   Rol,
@@ -19,5 +20,6 @@ module.exports = {
   Prioridad,
   Accion,
   DerivacionInterna,
-  SeguimientoInterno
+  SeguimientoInterno,
+  Respuesta
 };

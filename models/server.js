@@ -25,7 +25,8 @@ class Server{
             prioridad:'/api/prioridad',
             acciones:'/api/acciones',
             derivarinterno:'/api/derivar-interno',
-            seguimientointerno:'/api/seguimiento-interno'
+            seguimientointerno:'/api/seguimiento-interno',
+            respuesta:'/api/respuesta'
         }
         //Connect to socket
         this.httpServer = new http.Server(this.app);
@@ -88,6 +89,7 @@ class Server{
         this.app.use(this.paths.prioridad, require('../routes/prioridades'));
         this.app.use(this.paths.derivarinterno, require('../routes/derivacion-internas'));
         this.app.use(this.paths.seguimientointerno, require('../routes/seguimiento-internos'));
+        this.app.use(this.paths.respuesta, require('../routes/respuestas'));
         /* this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuario, require('../routes/usuarios'));
         this.app.use(this.paths.uploads, require('../routes/uploads')); */

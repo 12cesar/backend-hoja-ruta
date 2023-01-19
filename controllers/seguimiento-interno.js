@@ -1,4 +1,5 @@
 const { request, response } = require("express");
+const { funDate } = require("../helpers/generar-fecha");
 const { DerivacionInterna, SeguimientoInterno, Area } = require("../models");
 const Respuesta = require("../models/respuesta");
 
@@ -60,10 +61,31 @@ const postSeguimientoInterno=(req=request,res=response)=>{
         })
     }
 }
-const putSeguimientoInterno=(req=request,res=response)=>{
+const putSeguimientoInterno=async(req=request,res=response)=>{
     try {
+        const {id}= req.params;
+        const {ano,fecha, hora} = funDate();
+        const derivacion = await DerivacionInterna.update({
+            estado_recepcion:1
+        },{
+            where:{
+                id
+            }
+        });
+        const data = {
+            fecha_recepcion:fecha,
+            hora_recepcion:hora
+        }
+        const recepcion = await SeguimientoInterno.update(data,{
+            where:{
+                id_derivacion:id
+            }
+        })
         res.json({
-            ok:true
+            ok:true,
+            msg:'Se recepciono el tramite interno con exito',
+            derivacion,
+            recepcion
         })
     } catch (error) {
         res.status(400).json({
@@ -72,6 +94,7 @@ const putSeguimientoInterno=(req=request,res=response)=>{
         })
     }
 }
+
 const deleteSeguimientoInterno=(req=request,res=response)=>{
     try {
         res.json({

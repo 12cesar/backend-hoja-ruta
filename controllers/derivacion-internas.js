@@ -1,12 +1,28 @@
 const { request, response } = require("express");
 const { funDate } = require("../helpers");
-const { DerivacionInterna, RutaInterna, SeguimientoInterno } = require("../models");
+const { DerivacionInterna, RutaInterna, SeguimientoInterno, TramiteInterno } = require("../models");
 
 
-const getDerivacionInternas=(req=request,res=response)=>{
+const getDerivacionInternas=async(req=request,res=response)=>{
     try {
+        const {id_area} = req.usuarioToken;
+        const derivacion = await DerivacionInterna.findAll(
+            {
+                where:{
+                    id_area,
+                    id_respuesta:null
+                },
+                include:[
+                    {
+                        model:TramiteInterno
+                    }
+                ]
+            }
+        )
         res.json({
-            ok:true
+            ok:true,
+            msg:'Se muestran las derivacion con exito',
+            derivacion
         })
     } catch (error) {
         res.status(400).json({
