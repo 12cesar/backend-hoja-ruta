@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF Result Template</title>
+    <style>
+        #contenedor {
+            display: flex;
+            grid-template-columns: auto auto auto;
+        }
+
+        #header {
+            margin-top: 30px;
+            border-bottom: 1px solid #ddd;
+            height: 100px;
+        }
+
+        .logoGob {
+            width: 13%;
+            position: absolute;
+            left: 70px;
+            margin-top: -10px;
+        }
+
+        .logoDir {
+            width: 12%;
+            position: absolute;
+            right: 120px;
+            margin-top: -7px;
+        }
+
+        .titulo {
+            text-align: center;
+        }
+
+        .h-1,
+        .h-2,
+        .h-3,
+        .h-4 {}
+
+
+        #pageFooter .title {
+            color: #666;
+            width: 70%;
+            margin: 0;
+            padding-bottom: 5px;
+            text-align: let;
+            font-family: sans-serif;
+            font-size: .65em;
+            float: left;
+        }
+
+        .contenido {
+            display: grid !important;
+            width: 90%;
+            max-width: 1240px;
+            margin: 20px auto;
+            grid-template-columns: 0.2fr 0.2fr 3fr;
+            grid-template-rows: auto;
+            grid-gap: 20px;
+        }
+
+        .sumilla {
+            width: 82%;
+            margin-left: 70px;
+        }
+
+        .sumilla h4 {
+            font-size: 13px;
+            font-weight: bold;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .sumilla h5 {
+            font-size: 14px;
+            margin-bottom: -18px;
+        }
+
+        .sumilla h5:nth-child(2) {
+            font-size: 13px;
+        }
+
+        .sumilla h6 {
+            font-size: 10px;
+            margin-left: 113px;
+        }
+
+        /*  .sumilla h5:nth-child(2) b {
+            margin-left: 70px;
+            margin-right: 20px;
+        }
+
+        .sumilla h5:nth-child(4) b {
+            margin-left: 38px;
+            margin-right: 20px;
+        }
+
+        .sumilla h5:nth-child(5) b {
+            margin-left: 17px;
+            margin-right: 20px;
+        }
+
+        .sumilla h5:nth-child(6) b {
+            margin-left: 45px;
+            margin-right: 20px;
+        } */
+
+        .contenido {
+            width: 82%;
+            margin-top: 40px;
+            text-align: justify;
+            font-size: 13px;
+        }
+
+        .fecha {
+            text-align: right;
+            margin-bottom: 10px !important;
+            font-weight: 200;
+        }
+
+        hr {
+            text-decoration: underline;
+            font-weight: bold;
+            color: black;
+            background-color: black;
+            margin-top: 30px;
+        }
+
+        .codigo {
+            border-width: 1px;
+            border-style: solid;
+            border-color: black;
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+
+        .tablaFecha {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .tablaFecha td,
+        th {
+            border: 1px solid #ccc;
+            text-align: left;
+            padding: 8px;
+        }
+        .contenedor-final{
+            margin-top: 40px;
+            justify-content: center;
+            align-items: center;
+            margin-left: 10px;
+        }
+
+        .tablaRuta {
+            table-layout: fixed;
+            width: 300px;
+            
+        }
+        .tablaRuta th {
+            width: 125px;
+            text-align: center;
+        }
+        .tablaRuta td {
+            border: 1px solid black;
+            width: 100px;
+            word-wrap: break-word;
+            height: 90px;
+            align-items: center;
+            text-align: center;
+        }
+        .numero{
+            width: 20px!important;
+        }
+        .numero,.destino,.accion,.fecha,.vb,.observacion{      
+            font-size: 10px!important;
+        }
+        .fecha{
+            width: 60px!important;
+        }
+        .vb{
+            width: 100px!important;
+        }
+        .observacion{
+            width: 200px!important;
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+
+    <div id="contenedor">
+
+        <div id="pageFooter" style="border-top: 1px solid #ddd; padding-top: 5px;">
+            <p class="title" style="">DIRECCION: JR. LOS TULIPANES MZA. 1 LOTE. 5 A.H. 7 DE JUNIO -
+                PUCALLPA-UCAYALI-PERU</p>
+            <P class="title">https://www.gob.pe/regionucayali-riscoronelportillo</P>
+            <p
+                style="color:black; margin: 0; padding-bottom: 5px; text-align: right; font-family: sans-serif; font-size: .65em">
+                Página {{page}} de {{pages}}</p>
+        </div>
+        <div>
+            <img src='http://localhost:4000/img/rscp.png' class="logoGob">
+            <div class="logoDir">
+                <table class="tablaFecha">
+                    <tr>
+                        <th>Dia</th>
+                        <th>Mes</th>
+                        <th>Año</th>
+                    </tr>
+                    <tr>
+                        <td>{{dia}}</td>
+                        <td>{{mes}}</td>
+                        <td>{{ano}}</td>
+                    </tr>
+                </table>
+
+            </div>
+            <div class="titulo">
+
+                <h4 class="h-4">TRAMITE INTERNO N° <strong class="codigo">{{codigo}}</strong> </h4>
+                <h3 class="h-1">HOJA DE RUTA</h3>
+            </div>
+        </div>
+        <div class="contenedor-final">
+            <table class="tablaRuta">
+                <tr>
+                    <th class="numero">N°</th>
+                    <th class="destino">DESTINO</th>
+                    <th class="accion">ACCION</th>
+                    <th class="fecha">FECHA DE RECEPCION</th>
+                    <th class="vb">V° B°</th>
+                    <th class="observacion">OBSERVACIONES</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+        <div class="acciones">
+            <h4>Acciones</h4>
+        </div>
+    </div>
+</body>
+
+</html>
