@@ -9,7 +9,7 @@ const getRutaInternas = async (req = request, res = response) => {
     const rutaInterna = await RutaInterna.findAll({
       where: {
         estado: 1,
-        derivacion:0
+        derivacion: 0,
       },
       include: [
         {
@@ -20,11 +20,10 @@ const getRutaInternas = async (req = request, res = response) => {
         },
       ],
       order: [["codigo_tramite", "ASC"]],
-      
     });
     res.json({
       ok: true,
-      msg:'Se muestra con exito los tramites internos',
+      msg: "Se muestra con exito los tramites internos",
       rutaInterna,
     });
   } catch (error) {
@@ -40,7 +39,7 @@ const getTramiteDerivado = async (req = request, res = response) => {
     const rutaInterna = await RutaInterna.findAll({
       where: {
         estado: 1,
-        derivacion:1
+        derivacion: 1,
       },
       include: [
         {
@@ -51,11 +50,10 @@ const getTramiteDerivado = async (req = request, res = response) => {
         },
       ],
       order: [["codigo_tramite", "ASC"]],
-      
     });
     res.json({
       ok: true,
-      msg:'Se muestra con exito los tramites internos',
+      msg: "Se muestra con exito los tramites internos",
       rutaInterna,
     });
   } catch (error) {
@@ -65,35 +63,37 @@ const getTramiteDerivado = async (req = request, res = response) => {
     });
   }
 };
-const getRutaInterna = async(req = request, res = response) => {
+const getRutaInterna = async (req = request, res = response) => {
   try {
     const { codigo } = req.params;
     const rutaInterna = await RutaInterna.findOne({
-        where:{
-            codigo_tramite:codigo,
-            estado:1
-        },
-        include:{
-            model:TramiteInterno
-        }
+      where: {
+        codigo_tramite: codigo,
+        estado: 1,
+      },
+      include: {
+        model: TramiteInterno,
+      },
     });
-    const arrayDestino = rutaInterna.id_destino.split(',');
-    let area=[];
-    for (let i = 0; i < arrayDestino.length; i++) {
-      const areas = await Area.findOne({
-        where:{
-          id:Number(arrayDestino[i])
-        }
-      });   
-      area.push({id:areas.id,nombre:areas.nombre});
+    if (rutaInterna) {
+      const arrayDestino = rutaInterna.id_destino.split(",");
+      let area = [];
+      for (let i = 0; i < arrayDestino.length; i++) {
+        const areas = await Area.findOne({
+          where: {
+            id: Number(arrayDestino[i]),
+          },
+        });
+        area.push({ id: areas.id, nombre: areas.nombre });
+      }
+
+      res.json({
+        ok: true,
+        msg: `Se muestra el tramite interno: ${codigo}`,
+        rutaInterna,
+        area,
+      });
     }
-    
-    res.json({
-      ok: true,
-      msg:`Se muestra el tramite interno: ${codigo}`,
-      rutaInterna,
-      area
-    });
   } catch (error) {
     res.status(400).json({
       ok: false,
@@ -106,28 +106,28 @@ const postRutaInterna = async (req = request, res = response) => {
     const { codigo, cantidad, id_destino, ...data } = req.body;
     const destinos = destinoArray(id_destino);
     const resp = await rutaInter(codigo);
-      if (resp === false) {
-        return res.status(400).json({
-          ok: false,
-          msg: "El tramite ha sido derivado, no se puede actualizar",
-        });
-      } else {
-        data.codigo_tramite = codigo;
-        data.cantidad = cantidad;
-        data.id_destino = destinos;
-        const rutaInterna = await RutaInterna.create(data);
-        res.json({
-          ok: true,
-          msg: "Se registro la ruta con exito",
-          rutaInterna,
-        });
-      }
-    } catch (error) {
-      res.status(400).json({
+    if (resp === false) {
+      return res.status(400).json({
         ok: false,
-        msg: `Error:${error}`,
+        msg: "El tramite ha sido derivado, no se puede actualizar",
+      });
+    } else {
+      data.codigo_tramite = codigo;
+      data.cantidad = cantidad;
+      data.id_destino = destinos;
+      const rutaInterna = await RutaInterna.create(data);
+      res.json({
+        ok: true,
+        msg: "Se registro la ruta con exito",
+        rutaInterna,
       });
     }
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error:${error}`,
+    });
+  }
 };
 const putRutaInterna = (req = request, res = response) => {
   try {

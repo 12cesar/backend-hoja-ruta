@@ -27,7 +27,11 @@ class Server{
             derivarinterno:'/api/derivar-interno',
             seguimientointerno:'/api/seguimiento-interno',
             respuesta:'/api/respuesta',
-            pdfcreator:'/api/pdfcreator'
+            pdfcreator:'/api/pdfcreator',
+            tramiteexterno:'/api/tramite-externo',
+            rutaexterna:'/api/ruta-externa',
+            derivarexterno:'/api/derivar-externo',
+            seguimientoexterno:'/api/seguimiento-externo'
         }
         //Connect to socket
         this.httpServer = new http.Server(this.app);
@@ -91,6 +95,10 @@ class Server{
         this.app.use(this.paths.derivarinterno, require('../routes/derivacion-internas'));
         this.app.use(this.paths.seguimientointerno, require('../routes/seguimiento-internos'));
         this.app.use(this.paths.respuesta, require('../routes/respuestas'));
+        this.app.use(this.paths.tramiteexterno, require('../routes/tramite-externos'));
+        this.app.use(this.paths.rutaexterna, require('../routes/ruta-externa'));
+        this.app.use(this.paths.derivarexterno, require('../routes/derivacion-externas'));
+        this.app.use(this.paths.seguimientoexterno, require('../routes/seguimiento-externos'));
         this.app.use(this.paths.pdfcreator, require('../routes/pdf'));
         /* this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuario, require('../routes/usuarios'));

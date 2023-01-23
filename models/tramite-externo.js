@@ -1,5 +1,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
+const DerivacionExterna = require("./derivacion-externa");
+const RutaExterna = require("./ruta-externa");
 
 class TramiteExterno extends Model{};
 
@@ -11,6 +13,9 @@ TramiteExterno.init({
     },
     asunto:{
         type:DataTypes.STRING
+    },
+    proveido:{
+        type:DataTypes.INTEGER
     },
     observacion:{
         type:DataTypes.TEXT
@@ -32,11 +37,33 @@ TramiteExterno.init({
     },
     id_prioridad:{
         type:DataTypes.INTEGER,
+    },
+    id_area:{
+        type:DataTypes.INTEGER,
     }
 },{
     sequelize,
     timestamps:false,
     tableName:'tramite_externo'
 });
+
+TramiteExterno.hasMany(RutaExterna,{
+    as:'TramiteExternoRuta',
+    foreignKey:'codigo_tramite'
+});
+
+RutaExterna.belongsTo(TramiteExterno,{
+    foreignKey:'codigo_tramite',
+    sourceKey:'codigo_documento'
+});
+TramiteExterno.hasMany(DerivacionExterna,{
+    as:'TramiteExternoDerivacion',
+    foreignKey:'codigo_tramite'
+});
+
+DerivacionExterna.belongsTo(TramiteExterno,{
+    foreignKey:'codigo_tramite',
+    sourceKey:'codigo_documento'
+})
 
 module.exports = TramiteExterno;

@@ -1,4 +1,4 @@
-const { TramiteInterno } = require("../models");
+const { TramiteInterno, TramiteExterno } = require("../models");
 const { funDate } = require("./generar-fecha");
 
 
@@ -19,8 +19,25 @@ const codigoTramiteInterno = async()=>{
         codigo
     };
 }
+const codigoTramiteExterno = async()=>{
+    const {ano,fecha,hora} = funDate();
+    const count = await TramiteExterno.count({
+        where:{
+            ano
+        }
+    });
+    const numero = `${count+1}`;
+    const codigo = numero.padStart(6, "0");
+    return {
+        ano,
+        fecha,
+        hora,
+        codigo
+    };
+}
 
 
 module.exports = {
-    codigoTramiteInterno
+    codigoTramiteInterno,
+    codigoTramiteExterno
 }

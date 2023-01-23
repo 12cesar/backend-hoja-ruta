@@ -1,6 +1,6 @@
 const { request, response } = require("express");
 const { funDate } = require("../helpers/generar-fecha");
-const { DerivacionInterna, SeguimientoInterno, Area } = require("../models");
+const { DerivacionInterna, SeguimientoInterno, Area} = require("../models");
 const Respuesta = require("../models/respuesta");
 
 
@@ -49,6 +49,7 @@ const getSeguimientoInterno=async(req=request,res=response)=>{
         })
     }
 }
+
 const postSeguimientoInterno=(req=request,res=response)=>{
     try {
         res.json({
@@ -94,6 +95,8 @@ const putSeguimientoInterno=async(req=request,res=response)=>{
         })
     }
 }
+
+
 
 const deleteSeguimientoInterno=(req=request,res=response)=>{
     try {

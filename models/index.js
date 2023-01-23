@@ -10,6 +10,10 @@ const Accion = require("./accion");
 const DerivacionInterna = require("./derivacion-interna");
 const SeguimientoInterno = require("./seguimiento-interno");
 const Respuesta = require("./respuesta");
+const TramiteExterno = require("./tramite-externo");
+const RutaExterna = require("./ruta-externa");
+const DerivacionExterna = require("./derivacion-externa");
+const SeguimientoExterno = require("./seguimiento-externo");
 module.exports = {
   Server,
   Rol,
@@ -21,5 +25,9 @@ module.exports = {
   Accion,
   DerivacionInterna,
   SeguimientoInterno,
-  Respuesta
+  Respuesta,
+  TramiteExterno,
+  RutaExterna,
+  DerivacionExterna,
+  SeguimientoExterno
 };
