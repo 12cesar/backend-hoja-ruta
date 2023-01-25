@@ -1,5 +1,5 @@
 const { request, response } = require("express");
-const { Respuesta, DerivacionInterna, SeguimientoInterno } = require("../models");
+const { Respuesta, DerivacionInterna, SeguimientoInterno, DerivacionExterna, SeguimientoExterno } = require("../models");
 const { funDate } = require("../helpers/generar-fecha");
 
 
@@ -107,6 +107,64 @@ const putRespuestaInternoSinDerivado=async(req=request,res=response)=>{
         })
     }
 }
+const putRespuestaExternoDerivado=async(req=request,res=response)=>{
+    try {
+        const {observacion,accion,codigo_tramite, id_destino, id_respuesta,id_derivacion,...data} = req.body;
+        const {fecha,hora,ano}= funDate();
+        const dataDerivar = {
+            observacion,
+            id_accion:accion,
+            codigo_tramite,
+            id_area:id_destino
+        }
+        const dataSeguimiento= {
+            fecha_derivacion:fecha,
+            hora_derivacion:hora
+        }
+        const derivar = await DerivacionExterna.create(dataDerivar);
+        dataSeguimiento.id_derivacion = derivar.id;
+        const seguimiento = await SeguimientoExterno.create(dataSeguimiento);
+        const derivacion = await DerivacionExterna.update({
+            id_respuesta
+        },{
+            where:{
+                id:id_derivacion
+            }
+        })
+        res.json({
+            ok:true,
+            msg:'Se derivo el documento con exito',
+            derivacion
+        })
+    } catch (error) {
+        res.status(400).json({
+            ok:false,
+            msg:`Error:${error}`
+        })
+    }
+}
+const putRespuestaExternoSinDerivado=async(req=request,res=response)=>{
+    try {
+        const {id_derivacion,id_respuesta,...data} = req.body;
+        const derivacion = await DerivacionExterna.update({
+            id_respuesta
+        },{
+            where:{
+                id:id_derivacion
+            }
+        })
+        res.json({
+            ok:true,
+            msg:'Se actualizo con exito',
+            derivacion
+        })
+    } catch (error) {
+        res.status(400).json({
+            ok:false,
+            msg:`Error:${error}`
+        })
+    }
+}
 const putRespuesta=(req=request,res=response)=>{
     try {
         res.json({
@@ -140,5 +198,7 @@ module.exports = {
     putRespuesta,
     putRespuestaInternoDerivado,
     putRespuestaInternoSinDerivado,
+    putRespuestaExternoDerivado,
+    putRespuestaExternoSinDerivado,
     deleteRespuesta
 }

@@ -1,4 +1,5 @@
 const { request, response } = require("express");
+const { funDate } = require("../helpers/generar-fecha");
 const { SeguimientoExterno, DerivacionExterna, Area, Respuesta } = require("../models");
 
 
