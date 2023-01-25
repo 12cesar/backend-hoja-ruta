@@ -111,10 +111,20 @@ const postTramiteExterno = async (req = request, res = response) => {
     });
   }
 };
-const putTramiteExterno = (req = request, res = response) => {
+const putTramiteExterno = async(req = request, res = response) => {
   try {
+    const { asunto, ...data } = req.body;
+    const {codigo}=req.params;
+    data.asunto = asunto.toUpperCase();
+    const tramiteExterno = await TramiteExterno.update(data,{
+      where:{
+        codigo_documento:codigo
+      }
+    });
     res.json({
       ok: true,
+      msg: "Se actualizo el tramite externo con exito",
+      tramiteExterno,
     });
   } catch (error) {
     res.status(400).json({

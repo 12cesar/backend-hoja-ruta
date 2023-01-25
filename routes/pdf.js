@@ -1,11 +1,11 @@
 const { Router } = require("express");
-const { postPdfTramiteInterno } = require("../controllers/pdf");
+const { postPdfTramiteInterno, postPdfTramiteExterno } = require("../controllers/pdf");
 
 
 const router = Router();
 
 
 router.get('/',postPdfTramiteInterno);
-
+router.get('/externo',postPdfTramiteExterno);
 
 module.exports = router;

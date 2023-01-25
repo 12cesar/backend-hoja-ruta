@@ -101,10 +101,20 @@ const postTramiteInterno = async (req = request, res = response) => {
     });
   }
 };
-const putTramiteInterno = (req = request, res = response) => {
+const putTramiteInterno = async(req = request, res = response) => {
   try {
+    const {codigo} = req.params;
+    const { asunto, ...data } = req.body;
+    data.asunto = asunto.toUpperCase();
+    const tramiteInterno = await TramiteInterno.update(data,{
+      where:{
+        codigo_documento:codigo
+      }
+    });
     res.json({
       ok: true,
+      msg: "Se actualizo el tramite interno con exito",
+      tramiteInterno,
     });
   } catch (error) {
     res.status(400).json({

@@ -18,7 +18,7 @@ router.post('/',[
     validarJWT,
     validarCampos
 ],postTramiteInterno);
-router.put('/:id',putTramiteInterno);
+router.put('/:codigo',putTramiteInterno);
 router.delete('/:id',deleteTramiteInterno);
 
 

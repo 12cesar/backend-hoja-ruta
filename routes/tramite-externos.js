@@ -18,7 +18,7 @@ router.post('/',[
     validarJWT,
     validarCampos
 ],postTramiteExterno);
-router.put('/:id',putTramiteExterno);
+router.put('/:codigo',putTramiteExterno);
 router.delete('/:id',deleteTramiteExterno);
 
 
