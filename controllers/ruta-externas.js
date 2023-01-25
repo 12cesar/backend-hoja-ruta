@@ -1,4 +1,5 @@
 const { request, response } = require("express");
+const { Op } = require("sequelize");
 const { destinoArray } = require("../helpers");
 const { rutaExter } = require("../helpers");
 const { RutaExterna, TramiteExterno, Area } = require("../models");
@@ -36,6 +37,30 @@ const getRutaExternas = async (req = request, res = response) => {
 const getTramiteDerivado = async (req = request, res = response) => {
   try {
     const { id_area } = req.usuarioToken;
+    const {buscar} = req.query;
+    console.log(buscar);
+    if (buscar === '') {
+      const rutaExterna = await RutaExterna.findAll({
+        where: {
+          estado: 1,
+          derivacion: 1,
+        },
+        include: [
+          {
+            model: TramiteExterno,
+            where: {
+              id_area,
+            },
+          },
+        ],
+        order: [["codigo_tramite", "ASC"]],
+      });
+      return res.json({
+        ok: true,
+        msg: "Se muestra con exito los tramites internos",
+        rutaExterna,
+      });
+    }
     const rutaExterna = await RutaExterna.findAll({
       where: {
         estado: 1,
@@ -46,6 +71,33 @@ const getTramiteDerivado = async (req = request, res = response) => {
           model: TramiteExterno,
           where: {
             id_area,
+            [Op.or]: [
+              {
+                dni: {
+                  [Op.startsWith]: `%${buscar}%`,
+                },
+              },
+              {
+                ciudadano: {
+                  [Op.startsWith]: `%${buscar}%`,
+                },
+              },
+              {
+                codigo_documento: {
+                  [Op.startsWith]: `%${buscar}%`,
+                },
+              },
+              {
+                proveido: {
+                  [Op.startsWith]: `%${buscar}%`,
+                },
+              },
+              {
+                asunto:{
+                  [Op.startsWith]:`%${buscar}%`
+                }, 
+              }
+            ],
           },
         },
       ],

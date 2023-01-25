@@ -11,6 +11,12 @@ TramiteExterno.init({
         type:DataTypes.CHAR,
         primaryKey:true
     },
+    dni:{
+        type:DataTypes.CHAR
+    },
+    ciudadano:{
+        type:DataTypes.STRING
+    },
     asunto:{
         type:DataTypes.STRING
     },

@@ -2,6 +2,7 @@ const { request, response } = require("express");
 const { rutaInter } = require("../helpers");
 const { destinoArray } = require("../helpers/fc-destinos");
 const { RutaInterna, TramiteInterno, Area } = require("../models");
+const { Op } = require("sequelize");
 
 const getRutaInternas = async (req = request, res = response) => {
   try {
@@ -36,6 +37,29 @@ const getRutaInternas = async (req = request, res = response) => {
 const getTramiteDerivado = async (req = request, res = response) => {
   try {
     const { id_area } = req.usuarioToken;
+    const {buscar}= req.query;
+    if (buscar === '') {
+      const rutaInterna = await RutaInterna.findAll({
+        where: {
+          estado: 1,
+          derivacion: 1,
+        },
+        include: [
+          {
+            model: TramiteInterno,
+            where: {
+              id_area,
+            },
+          },
+        ],
+        order: [["codigo_tramite", "ASC"]],
+      });
+      return res.json({
+        ok: true,
+        msg: "Se muestra con exito los tramites internos",
+        rutaInterna,
+      });
+    }
     const rutaInterna = await RutaInterna.findAll({
       where: {
         estado: 1,
@@ -46,6 +70,23 @@ const getTramiteDerivado = async (req = request, res = response) => {
           model: TramiteInterno,
           where: {
             id_area,
+            [Op.or]: [
+              {
+                codigo_documento: {
+                  [Op.startsWith]: `%${buscar}%`,
+                },
+              },
+              {
+                asunto:{
+                  [Op.startsWith]:`%${buscar}%`
+                }, 
+              },
+              {
+                  registrado:{
+                    [Op.startsWith]:`%${buscar}%`
+                  }, 
+                }
+            ],
           },
         },
       ],
