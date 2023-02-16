@@ -31,7 +31,8 @@ class Server{
             tramiteexterno:'/api/tramite-externo',
             rutaexterna:'/api/ruta-externa',
             derivarexterno:'/api/derivar-externo',
-            seguimientoexterno:'/api/seguimiento-externo'
+            seguimientoexterno:'/api/seguimiento-externo',
+            tipodocumento:'/api/tipo-documento'
         }
         //Connect to socket
         this.httpServer = new http.Server(this.app);
@@ -100,6 +101,7 @@ class Server{
         this.app.use(this.paths.derivarexterno, require('../routes/derivacion-externas'));
         this.app.use(this.paths.seguimientoexterno, require('../routes/seguimiento-externos'));
         this.app.use(this.paths.pdfcreator, require('../routes/pdf'));
+        this.app.use(this.paths.tipodocumento, require('../routes/tipo-documentos'));
         /* this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuario, require('../routes/usuarios'));
         this.app.use(this.paths.uploads, require('../routes/uploads')); */

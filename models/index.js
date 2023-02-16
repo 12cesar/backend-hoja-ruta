@@ -14,6 +14,7 @@ const TramiteExterno = require("./tramite-externo");
 const RutaExterna = require("./ruta-externa");
 const DerivacionExterna = require("./derivacion-externa");
 const SeguimientoExterno = require("./seguimiento-externo");
+const TipoDocumento = require("./tipo-documento");
 module.exports = {
   Server,
   Rol,
@@ -29,5 +30,6 @@ module.exports = {
   TramiteExterno,
   RutaExterna,
   DerivacionExterna,
-  SeguimientoExterno
+  SeguimientoExterno,
+  TipoDocumento
 };

@@ -1,6 +1,6 @@
 const { request, response } = require("express");
 const { codigoTramiteExterno } = require("../helpers");
-const { TramiteExterno } = require("../models");
+const { TramiteExterno, TipoDocumento } = require("../models");
 const { Op } = require("sequelize");
 const getTramiteExternos = async (req = request, res = response) => {
   try {
@@ -12,6 +12,11 @@ const getTramiteExternos = async (req = request, res = response) => {
         where: {
           id_area: usuario.id_area,
         },
+        include:[
+          {
+            model:TipoDocumento
+          }
+        ],
         order: [["codigo_documento", "DESC"]],
       });
       return res.json({
@@ -25,22 +30,7 @@ const getTramiteExternos = async (req = request, res = response) => {
           id_area: usuario.id_area,
           [Op.or]: [
             {
-              dni: {
-                [Op.startsWith]: `%${buscar}%`,
-              },
-            },
-            {
-              ciudadano: {
-                [Op.startsWith]: `%${buscar}%`,
-              },
-            },
-            {
               codigo_documento: {
-                [Op.startsWith]: `%${buscar}%`,
-              },
-            },
-            {
-              proveido: {
                 [Op.startsWith]: `%${buscar}%`,
               },
             },
@@ -48,9 +38,14 @@ const getTramiteExternos = async (req = request, res = response) => {
               asunto:{
                 [Op.startsWith]:`%${buscar}%`
               }, 
-            }
+            },
           ],
         },
+        include:[
+          {
+            model:TipoDocumento
+          }
+        ],
         order: [["codigo_documento", "DESC"]],
       });
       res.json({

@@ -11,17 +11,14 @@ TramiteExterno.init({
         type:DataTypes.CHAR,
         primaryKey:true
     },
-    dni:{
-        type:DataTypes.CHAR
+    tipo_documento:{
+        type:DataTypes.INTEGER
     },
-    ciudadano:{
+    nom_documento:{
         type:DataTypes.STRING
     },
     asunto:{
         type:DataTypes.STRING
-    },
-    proveido:{
-        type:DataTypes.INTEGER
     },
     observacion:{
         type:DataTypes.TEXT

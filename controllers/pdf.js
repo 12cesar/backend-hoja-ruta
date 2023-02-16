@@ -56,7 +56,7 @@ const postPdfTramiteInterno=async(req=request,res=response)=>{
 }
 const postPdfTramiteExterno=async(req=request,res=response)=>{
 try {
-    const {codigo, proveido} = req.query;
+    const {codigo} = req.query;
     const tramite = await TramiteExterno.findOne({
       where:{
         codigo_documento:codigo
@@ -90,7 +90,6 @@ try {
       html = html.replace('{{mes}}',arrayFech[1]);
       html = html.replace('{{dia}}',arrayFech[2]);
       html = html.replace('{{codigo}}',codigo);
-      html = html.replace('{{proveido}}',proveido);
       html = html.replace('{{nomaccion}}',divaccion);
       let ubicacion = path.join(__dirname,'../document/','pdf',`tramite-externo-${tramite.id_area}.pdf`);
       pdf.create(html, options).toFile(ubicacion, function (err, resp) {
