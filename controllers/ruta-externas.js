@@ -73,22 +73,7 @@ const getTramiteDerivado = async (req = request, res = response) => {
             id_area,
             [Op.or]: [
               {
-                dni: {
-                  [Op.startsWith]: `%${buscar}%`,
-                },
-              },
-              {
-                ciudadano: {
-                  [Op.startsWith]: `%${buscar}%`,
-                },
-              },
-              {
                 codigo_documento: {
-                  [Op.startsWith]: `%${buscar}%`,
-                },
-              },
-              {
-                proveido: {
                   [Op.startsWith]: `%${buscar}%`,
                 },
               },
@@ -96,6 +81,62 @@ const getTramiteDerivado = async (req = request, res = response) => {
                 asunto:{
                   [Op.startsWith]:`%${buscar}%`
                 }, 
+              }
+            ],
+          },
+        },
+      ],
+      order: [["codigo_tramite", "ASC"]],
+    });
+    res.json({
+      ok: true,
+      msg: "Se muestra con exito los tramites internos",
+      rutaExterna,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error:${error}`,
+    });
+  }
+};
+const getTramiteExternoGeneral = async (req = request, res = response) => {
+  try {
+    const {buscar} = req.query;
+    console.log(buscar);
+    if (buscar === '') {
+      const rutaExterna = await RutaExterna.findAll({
+        where: {
+          estado: 1,
+          derivacion: 1,
+        },
+        include: [
+          {
+            model: TramiteExterno
+          },
+        ],
+        order: [["codigo_tramite", "ASC"]],
+      });
+      return res.json({
+        ok: true,
+        msg: "Se muestra con exito los tramites internos",
+        rutaExterna,
+      });
+    }
+    const rutaExterna = await RutaExterna.findAll({
+      where: {
+        estado: 1,
+        derivacion: 1,
+      },
+      include: [
+        {
+          model: TramiteExterno,
+          where: {
+            [Op.or]: [
+              {
+                codigo_documento: {
+                  [Op.startsWith]: `%${buscar}%`,
+                },
               }
             ],
           },
@@ -210,6 +251,7 @@ module.exports = {
   getRutaExternas,
   getTramiteDerivado,
   getRutaExterna,
+  getTramiteExternoGeneral,
   postRutaExterna,
   putRutaExterna,
   deleteRutaExterna,

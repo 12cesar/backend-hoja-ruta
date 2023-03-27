@@ -43,6 +43,9 @@ TramiteExterno.init({
     },
     id_area:{
         type:DataTypes.INTEGER,
+    },
+    proveido:{
+        type:DataTypes.CHAR
     }
 },{
     sequelize,

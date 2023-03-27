@@ -4,7 +4,7 @@ const fs = require("fs");
 const pdfHtml = require("pdf-creator-node");
 const pdf = require("html-pdf");
 const { funDate } = require("../helpers/generar-fecha");
-const { TramiteInterno, TramiteExterno, Accion } = require("../models");
+const { TramiteInterno, TramiteExterno, Accion, Area } = require("../models");
 
 const postPdfTramiteInterno=async(req=request,res=response)=>{
   try {
@@ -12,13 +12,19 @@ const postPdfTramiteInterno=async(req=request,res=response)=>{
       const tramite = await TramiteInterno.findOne({
         where:{
           codigo_documento:codigo
-        }
+        },
+        include:[
+          {
+            model:Area
+          }
+        ]
       });
       const acciones = await Accion.findAll({
         where:{
           estado:1
         }
       });
+      console.log(tramite.Area.abreviatura);
       divaccion=''
       for (let i = 0; i < acciones.length; i++) {
         accion = `
@@ -42,6 +48,7 @@ const postPdfTramiteInterno=async(req=request,res=response)=>{
         html = html.replace('{{dia}}',arrayFech[2]);
         html = html.replace('{{codigo}}',codigo);
         html = html.replace('{{nomaccion}}',divaccion);
+        html = html.replace('{{area}}',tramite.Area.abreviatura);
         let ubicacion = path.join(__dirname,'../document/','pdf',`tramite-interno-${tramite.id_area}.pdf`);
         pdf.create(html, options).toFile(ubicacion, function (err, resp) {
           if (err) {
@@ -56,7 +63,7 @@ const postPdfTramiteInterno=async(req=request,res=response)=>{
 }
 const postPdfTramiteExterno=async(req=request,res=response)=>{
 try {
-    const {codigo} = req.query;
+    const {codigo, proveido} = req.query;
     const tramite = await TramiteExterno.findOne({
       where:{
         codigo_documento:codigo
@@ -91,6 +98,7 @@ try {
       html = html.replace('{{dia}}',arrayFech[2]);
       html = html.replace('{{codigo}}',codigo);
       html = html.replace('{{nomaccion}}',divaccion);
+      html=html.replace('{{proveido}}',proveido);
       let ubicacion = path.join(__dirname,'../document/','pdf',`tramite-externo-${tramite.id_area}.pdf`);
       pdf.create(html, options).toFile(ubicacion, function (err, resp) {
         if (err) {

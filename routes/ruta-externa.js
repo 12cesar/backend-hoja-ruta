@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getRutaExternas, getRutaExterna, postRutaExterna, putRutaExterna, deleteRutaExterna, getTramiteDerivado } = require("../controllers/ruta-externas");
+const { getRutaExternas, getRutaExterna, postRutaExterna, putRutaExterna, deleteRutaExterna, getTramiteDerivado, getTramiteExternoGeneral } = require("../controllers/ruta-externas");
 const { validarCampos, validarJWT } = require("../middlewares");
 
 
@@ -17,6 +17,9 @@ router.get('/:tramite/derivado',[
     validarJWT,
     validarCampos
 ],getTramiteDerivado);
+router.get('/tramite/externo/general',[
+    validarCampos
+], getTramiteExternoGeneral)
 router.get('/:codigo',getRutaExterna)
 router.post('/',postRutaExterna);
 router.put('/:codigo',putRutaExterna);

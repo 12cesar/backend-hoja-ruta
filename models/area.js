@@ -2,6 +2,7 @@ const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
 const DerivacionExterna = require("./derivacion-externa");
 const DerivacionInterna = require("./derivacion-interna");
+const TramiteInterno = require("./tramite-interno");
 const Usuario = require("./usuario");
 
 class Area extends Model{};
@@ -22,6 +23,14 @@ Area.init({
     sequelize,
     timestamps:false,
     tableName:'area'
+});
+Area.hasMany(TramiteInterno,{
+    as:'AreaInterno',
+    foreignKey:'id_area'
+});
+TramiteInterno.belongsTo(Area,{
+    foreignKey:'id_area',
+    sourceKey:'id'
 });
 Area.hasMany(Usuario,{
     as:'AreaUsuario',

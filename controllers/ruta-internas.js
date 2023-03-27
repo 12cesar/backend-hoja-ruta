@@ -104,6 +104,71 @@ const getTramiteDerivado = async (req = request, res = response) => {
     });
   }
 };
+const getTramiteDerivadoInternoGeneral = async (req = request, res = response) => {
+  try {
+    const {buscar}= req.query;
+    if (buscar === '') {
+      const rutaInterna = await RutaInterna.findAll({
+        where: {
+          estado: 1,
+          derivacion: 1,
+        },
+        include: [
+          {
+            model: TramiteInterno
+          },
+        ],
+        order: [["codigo_tramite", "ASC"]],
+      });
+      return res.json({
+        ok: true,
+        msg: "Se muestra con exito los tramites internos",
+        rutaInterna,
+      });
+    }
+    const rutaInterna = await RutaInterna.findAll({
+      where: {
+        estado: 1,
+        derivacion: 1,
+      },
+      include: [
+        {
+          model: TramiteInterno,
+          where: {
+            [Op.or]: [
+              {
+                codigo_documento: {
+                  [Op.startsWith]: `%${buscar}%`,
+                },
+              },
+              {
+                asunto:{
+                  [Op.startsWith]:`%${buscar}%`
+                }, 
+              },
+              {
+                  registrado:{
+                    [Op.startsWith]:`%${buscar}%`
+                  }, 
+                }
+            ],
+          },
+        },
+      ],
+      order: [["codigo_tramite", "ASC"]],
+    });
+    res.json({
+      ok: true,
+      msg: "Se muestra con exito los tramites internos",
+      rutaInterna,
+    });
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error:${error}`,
+    });
+  }
+};
 const getRutaInterna = async (req = request, res = response) => {
   try {
     const { codigo } = req.params;
@@ -199,6 +264,7 @@ module.exports = {
   getRutaInternas,
   getTramiteDerivado,
   getRutaInterna,
+  getTramiteDerivadoInternoGeneral,
   postRutaInterna,
   putRutaInterna,
   deleteRutaInterna,

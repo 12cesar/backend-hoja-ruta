@@ -83,6 +83,8 @@ const getTramiteExterno = async (req = request, res = response) => {
 const postTramiteExterno = async (req = request, res = response) => {
   try {
     const usuario = req.usuarioToken;
+    const count = await TramiteExterno.count();
+    const numero = `${count+1}`;
     const { asunto, ...data } = req.body;
     data.asunto = asunto.toUpperCase();
     const registrado = `${usuario.nombre} ${usuario.apellido}`;
@@ -93,6 +95,7 @@ const postTramiteExterno = async (req = request, res = response) => {
     data.fecha = fecha;
     data.hora = hora;
     data.id_area = usuario.id_area;
+    data.proveido= numero.padStart(5, "0");
     const tramiteExterno = await TramiteExterno.create(data);
     res.json({
       ok: true,
@@ -111,6 +114,7 @@ const putTramiteExterno = async(req = request, res = response) => {
     const { asunto, ...data } = req.body;
     const {codigo}=req.params;
     data.asunto = asunto.toUpperCase();
+    data.proveido = '00004';
     const tramiteExterno = await TramiteExterno.update(data,{
       where:{
         codigo_documento:codigo

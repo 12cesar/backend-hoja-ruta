@@ -1,11 +1,33 @@
 const { request, response } = require("express");
 const { funDate } = require("../helpers/generar-fecha");
 const { DerivacionExterna, SeguimientoExterno, RutaExterna, TramiteExterno } = require("../models");
-
+const { Op } = require("sequelize");
 
 const getDerivacionExternas=async(req=request,res=response)=>{
     try {
         const {id_area} = req.usuarioToken;
+        const {buscar} = req.query;
+        if (buscar === '') {
+            const derivacion = await DerivacionExterna.findAll(
+                {
+                    where:{
+                        id_area,
+                        id_respuesta:null
+                    },
+                    include:[
+                        {
+                            model:TramiteExterno
+                        }
+                    ]
+                }
+            )
+            return res.json({
+                ok:true,
+                msg:'Se muestran las derivacion con exito',
+                derivacion,
+                buscar
+            })
+        }
         const derivacion = await DerivacionExterna.findAll(
             {
                 where:{
@@ -14,15 +36,30 @@ const getDerivacionExternas=async(req=request,res=response)=>{
                 },
                 include:[
                     {
-                        model:TramiteExterno
+                        model:TramiteExterno,
+                        where:{
+                            [Op.or]: [
+                                {
+                                  codigo_documento: {
+                                    [Op.startsWith]: `%${buscar}%`,
+                                  },
+                                },
+                                {
+                                  asunto:{
+                                    [Op.startsWith]:`%${buscar}%`
+                                  }, 
+                                },
+                              ],
+                        }
                     }
                 ]
             }
         )
-        res.json({
+        return res.json({
             ok:true,
             msg:'Se muestran las derivacion con exito',
-            derivacion
+            derivacion,
+            buscar
         })
     } catch (error) {
         res.status(400).json({
