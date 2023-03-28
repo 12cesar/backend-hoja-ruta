@@ -4,7 +4,7 @@ const fs = require("fs");
 const pdfHtml = require("pdf-creator-node");
 const pdf = require("html-pdf");
 const { funDate } = require("../helpers/generar-fecha");
-const { TramiteInterno, TramiteExterno, Accion, Area } = require("../models");
+const { TramiteInterno, TramiteExterno, Accion, Area, Prioridad } = require("../models");
 
 const postPdfTramiteInterno=async(req=request,res=response)=>{
   try {
@@ -16,6 +16,8 @@ const postPdfTramiteInterno=async(req=request,res=response)=>{
         include:[
           {
             model:Area
+          },{
+            model:Prioridad
           }
         ]
       });
@@ -49,6 +51,7 @@ const postPdfTramiteInterno=async(req=request,res=response)=>{
         html = html.replace('{{codigo}}',codigo);
         html = html.replace('{{nomaccion}}',divaccion);
         html = html.replace('{{area}}',tramite.Area.abreviatura);
+        html = html.replace('{{prioridad}}',tramite.Prioridad.nombre);
         let ubicacion = path.join(__dirname,'../document/','pdf',`tramite-interno-${tramite.id_area}.pdf`);
         pdf.create(html, options).toFile(ubicacion, function (err, resp) {
           if (err) {

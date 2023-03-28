@@ -1,7 +1,7 @@
 const { request, response } = require("express");
 const { rutaInter } = require("../helpers");
 const { destinoArray } = require("../helpers/fc-destinos");
-const { RutaInterna, TramiteInterno, Area, DerivacionInterna, SeguimientoInterno } = require("../models");
+const { RutaInterna, TramiteInterno, Area, DerivacionInterna, SeguimientoInterno, Prioridad } = require("../models");
 const { Op } = require("sequelize");
 const { funDate } = require("../helpers/generar-fecha");
 
@@ -51,6 +51,11 @@ const getTramiteDerivado = async (req = request, res = response) => {
             where: {
               id_area,
             },
+            include:[
+              {
+                model:Prioridad
+              }
+            ]
           },
         ],
         order: [["codigo_tramite", "ASC"]],
@@ -89,6 +94,11 @@ const getTramiteDerivado = async (req = request, res = response) => {
               },
             ],
           },
+          include:[
+            {
+              model:Prioridad
+            }
+          ]
         },
       ],
       order: [["codigo_tramite", "ASC"]],
@@ -211,6 +221,44 @@ const getRutaInterna = async (req = request, res = response) => {
     });
   }
 };
+const getRutaInternaCodigo = async (req = request, res = response) => {
+  try {
+    const { codigo } = req.params;
+    const rutaInterna = await RutaInterna.findOne({
+      where: {
+        codigo_tramite: codigo,
+        estado: 1,
+      },
+      include: {
+        model: TramiteInterno,
+      },
+    });
+    if (rutaInterna) {
+      const arrayDestino = rutaInterna.id_destino.split(",");
+      let area = [];
+      for (let i = 0; i < arrayDestino.length; i++) {
+        const areas = await Area.findOne({
+          where: {
+            id: Number(arrayDestino[i]),
+          },
+        });
+        area.push({ id: areas.id, nombre: areas.nombre });
+      }
+
+      res.json({
+        ok: true,
+        msg: `Se muestra el tramite interno: ${codigo}`,
+        rutaInterna,
+        area,
+      });
+    }
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `Error:${error}`,
+    });
+  }
+};
 const postRutaInterna = async (req = request, res = response) => {
   try {
     const { id_area } = req.usuarioToken;
@@ -244,7 +292,7 @@ const postRutaInterna = async (req = request, res = response) => {
 const putRutaInterna = async (req = request, res = response) => {
   try {
     const { id_area } = req.usuarioToken;
-    const { cantidad, id_destino, accion,id, ...data } = req.body;
+    const { cantidad, id_destino, accion,id,codigo, ...data } = req.body;
     const {fecha,hora,ano}= funDate();
     const destinos = destinoArray(id_destino);
     const ruta = await RutaInterna.findOne({
@@ -272,7 +320,8 @@ const putRutaInterna = async (req = request, res = response) => {
       });
     }
     const rutaActual = await RutaInterna.update({
-      id_destino:destinos
+      id_destino:destinos,
+      cantidad
     },{
       where:{
         id
@@ -284,6 +333,7 @@ const putRutaInterna = async (req = request, res = response) => {
         data.id_area = Number(arrayEnvio[i]);
         data.id_ruta = ruta.id;
         data.id_accion= accion;
+        data.codigo_tramite=codigo;
         const derivar = await DerivacionInterna.create(data);
         segui.fecha_derivacion=fecha;
         segui.hora_derivacion=hora;
@@ -318,6 +368,7 @@ module.exports = {
   getRutaInternas,
   getTramiteDerivado,
   getRutaInterna,
+  getRutaInternaCodigo,
   getTramiteDerivadoInternoGeneral,
   postRutaInterna,
   putRutaInterna,

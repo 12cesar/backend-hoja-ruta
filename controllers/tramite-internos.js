@@ -1,6 +1,6 @@
 const { request, response } = require("express");
 const { codigoTramiteInterno } = require("../helpers/fc-codigo-tramite");
-const { TramiteInterno } = require("../models");
+const { TramiteInterno, Prioridad } = require("../models");
 const { Op } = require("sequelize");
 
 const getTramiteInternos = async (req = request, res = response) => {
@@ -13,6 +13,11 @@ const getTramiteInternos = async (req = request, res = response) => {
           id_area: usuario.id_area,
         },
         order: [["codigo_documento", "DESC"]],
+        include:[
+          {
+            model:Prioridad
+          }
+        ]
       });
       return res.json({
         ok: true,
@@ -40,6 +45,11 @@ const getTramiteInternos = async (req = request, res = response) => {
             },
           },
         ],
+        include:[
+          {
+            model:Prioridad
+          }
+        ]
       },
       order: [["codigo_documento", "DESC"]],
     });
