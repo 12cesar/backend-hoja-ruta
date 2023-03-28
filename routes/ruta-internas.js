@@ -21,8 +21,14 @@ router.get('/tramite/interno/general',[
     validarCampos
 ], getTramiteDerivadoInternoGeneral)
 router.get('/:codigo',getRutaInterna);
-router.post('/',postRutaInterna);
-router.put('/:codigo',putRutaInterna);
+router.post('/',[
+    validarJWT,
+    validarCampos
+],postRutaInterna);
+router.put('/:codigo',[
+    validarJWT,
+    validarCampos
+],putRutaInterna);
 router.delete('/:codigo',deleteRutaInterna);
 
 

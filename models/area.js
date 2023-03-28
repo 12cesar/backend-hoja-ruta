@@ -2,6 +2,7 @@ const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
 const DerivacionExterna = require("./derivacion-externa");
 const DerivacionInterna = require("./derivacion-interna");
+const RutaInterna = require("./ruta-interna");
 const TramiteInterno = require("./tramite-interno");
 const Usuario = require("./usuario");
 
@@ -24,6 +25,7 @@ Area.init({
     timestamps:false,
     tableName:'area'
 });
+/*  Tramite interno */
 Area.hasMany(TramiteInterno,{
     as:'AreaInterno',
     foreignKey:'id_area'
@@ -32,6 +34,19 @@ TramiteInterno.belongsTo(Area,{
     foreignKey:'id_area',
     sourceKey:'id'
 });
+
+/* Area - Ruta Interna */
+Area.hasMany(RutaInterna,{
+    as:'AreaRutaInterna',
+    foreignKey:'id_envio'
+});
+RutaInterna.belongsTo(Area,{
+    foreignKey:'id_envio',
+    sourceKey:'id'
+})
+
+
+
 Area.hasMany(Usuario,{
     as:'AreaUsuario',
     foreignKey:'id_area'

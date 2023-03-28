@@ -12,6 +12,9 @@ RutaInterna.init({
         type:DataTypes.TINYINT,
         defaultValue:1
     },
+    id_envio:{
+        type:DataTypes.INTEGER
+    },
     id_destino:{
         type:DataTypes.STRING
     },

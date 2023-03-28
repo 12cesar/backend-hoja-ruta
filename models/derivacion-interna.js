@@ -24,6 +24,9 @@ DerivacionInterna.init({
     },
     id_respuesta:{
         type:DataTypes.INTEGER
+    },
+    id_ruta:{
+        type:DataTypes.INTEGER
     }
 },{
     sequelize,

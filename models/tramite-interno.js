@@ -1,6 +1,5 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require('../database/database');
-const DerivacionInterna = require("./derivacion-interna");
 const RutaInterna = require("./ruta-interna");
 
 class TramiteInterno extends Model{};
@@ -53,14 +52,5 @@ RutaInterna.belongsTo(TramiteInterno,{
     foreignKey:'codigo_tramite',
     sourceKey:'codigo_documento'
 });
-TramiteInterno.hasMany(DerivacionInterna,{
-    as:'TramiteInternoDerivacion',
-    foreignKey:'codigo_tramite'
-});
-
-DerivacionInterna.belongsTo(TramiteInterno,{
-    foreignKey:'codigo_tramite',
-    sourceKey:'codigo_documento'
-})
 
 module.exports = TramiteInterno;

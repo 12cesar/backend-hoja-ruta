@@ -87,7 +87,6 @@ const postDerivacionInterna=async(req=request,res=response)=>{
         const arrayEnvio = destino.split(',');
         data.codigo_tramite = codigo_tramite;
         let segui = {};
-        
         for (let i = 0; i < arrayEnvio.length; i++) {
             data.id_area = Number(arrayEnvio[i]);
             const derivar = await DerivacionInterna.create(data);

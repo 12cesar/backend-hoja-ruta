@@ -1,8 +1,9 @@
 const { request, response } = require("express");
 const { rutaInter } = require("../helpers");
 const { destinoArray } = require("../helpers/fc-destinos");
-const { RutaInterna, TramiteInterno, Area } = require("../models");
+const { RutaInterna, TramiteInterno, Area, DerivacionInterna, SeguimientoInterno } = require("../models");
 const { Op } = require("sequelize");
+const { funDate } = require("../helpers/generar-fecha");
 
 const getRutaInternas = async (req = request, res = response) => {
   try {
@@ -37,8 +38,8 @@ const getRutaInternas = async (req = request, res = response) => {
 const getTramiteDerivado = async (req = request, res = response) => {
   try {
     const { id_area } = req.usuarioToken;
-    const {buscar}= req.query;
-    if (buscar === '') {
+    const { buscar } = req.query;
+    if (buscar === "") {
       const rutaInterna = await RutaInterna.findAll({
         where: {
           estado: 1,
@@ -77,15 +78,15 @@ const getTramiteDerivado = async (req = request, res = response) => {
                 },
               },
               {
-                asunto:{
-                  [Op.startsWith]:`%${buscar}%`
-                }, 
+                asunto: {
+                  [Op.startsWith]: `%${buscar}%`,
+                },
               },
               {
-                  registrado:{
-                    [Op.startsWith]:`%${buscar}%`
-                  }, 
-                }
+                registrado: {
+                  [Op.startsWith]: `%${buscar}%`,
+                },
+              },
             ],
           },
         },
@@ -104,10 +105,13 @@ const getTramiteDerivado = async (req = request, res = response) => {
     });
   }
 };
-const getTramiteDerivadoInternoGeneral = async (req = request, res = response) => {
+const getTramiteDerivadoInternoGeneral = async (
+  req = request,
+  res = response
+) => {
   try {
-    const {buscar}= req.query;
-    if (buscar === '') {
+    const { buscar } = req.query;
+    if (buscar === "") {
       const rutaInterna = await RutaInterna.findAll({
         where: {
           estado: 1,
@@ -115,7 +119,7 @@ const getTramiteDerivadoInternoGeneral = async (req = request, res = response) =
         },
         include: [
           {
-            model: TramiteInterno
+            model: TramiteInterno,
           },
         ],
         order: [["codigo_tramite", "ASC"]],
@@ -142,15 +146,15 @@ const getTramiteDerivadoInternoGeneral = async (req = request, res = response) =
                 },
               },
               {
-                asunto:{
-                  [Op.startsWith]:`%${buscar}%`
-                }, 
+                asunto: {
+                  [Op.startsWith]: `%${buscar}%`,
+                },
               },
               {
-                  registrado:{
-                    [Op.startsWith]:`%${buscar}%`
-                  }, 
-                }
+                registrado: {
+                  [Op.startsWith]: `%${buscar}%`,
+                },
+              },
             ],
           },
         },
@@ -174,7 +178,7 @@ const getRutaInterna = async (req = request, res = response) => {
     const { codigo } = req.params;
     const rutaInterna = await RutaInterna.findOne({
       where: {
-        codigo_tramite: codigo,
+        id: codigo,
         estado: 1,
       },
       include: {
@@ -209,6 +213,7 @@ const getRutaInterna = async (req = request, res = response) => {
 };
 const postRutaInterna = async (req = request, res = response) => {
   try {
+    const { id_area } = req.usuarioToken;
     const { codigo, cantidad, id_destino, ...data } = req.body;
     const destinos = destinoArray(id_destino);
     const resp = await rutaInter(codigo);
@@ -221,6 +226,7 @@ const postRutaInterna = async (req = request, res = response) => {
       data.codigo_tramite = codigo;
       data.cantidad = cantidad;
       data.id_destino = destinos;
+      data.id_envio = id_area;
       const rutaInterna = await RutaInterna.create(data);
       res.json({
         ok: true,
@@ -235,11 +241,59 @@ const postRutaInterna = async (req = request, res = response) => {
     });
   }
 };
-const putRutaInterna = (req = request, res = response) => {
+const putRutaInterna = async (req = request, res = response) => {
   try {
-    res.json({
-      ok: true,
+    const { id_area } = req.usuarioToken;
+    const { cantidad, id_destino, accion,id, ...data } = req.body;
+    const {fecha,hora,ano}= funDate();
+    const destinos = destinoArray(id_destino);
+    const ruta = await RutaInterna.findOne({
+      where:{
+        id
+      }
     });
+    if (ruta) {
+      const existe = await DerivacionInterna.findOne({
+        where:{
+          id_ruta:id
+        }
+      });
+      if (existe) {
+        await SeguimientoInterno.destroy({
+          where:{
+            id_derivacion:existe.id
+          }
+        })
+      }
+      const destino = await DerivacionInterna.destroy({
+        where:{
+          id_ruta:id
+        }
+      });
+    }
+    const rutaActual = await RutaInterna.update({
+      id_destino:destinos
+    },{
+      where:{
+        id
+      }
+    });
+    const arrayEnvio = destinos.split(',');
+    let segui = {};
+    for (let i = 0; i < arrayEnvio.length; i++) {
+        data.id_area = Number(arrayEnvio[i]);
+        data.id_ruta = ruta.id;
+        data.id_accion= accion;
+        const derivar = await DerivacionInterna.create(data);
+        segui.fecha_derivacion=fecha;
+        segui.hora_derivacion=hora;
+        segui.id_derivacion= derivar.id;
+        const seguimiento = await SeguimientoInterno.create(segui);     
+    }
+    res.json({
+        ok:true,
+        msg:'Se derivo el tramite con exito, no se olvide de imprimir su hoja de ruta'
+    })
   } catch (error) {
     res.status(400).json({
       ok: false,
